@@ -35,6 +35,5 @@ export const config = {
      * - favicon.ico (favicon file)
      */
     "/((?!verify|static|favicon.ico).*)",
-    "/(api/(?!verify|new|auth).*)",
   ],
 };

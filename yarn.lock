@@ -1674,6 +1674,11 @@ json5@^1.0.1:
     array-includes "^3.1.5"
     object.assign "^4.1.3"
 
+just-split@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/just-split/-/just-split-3.1.1.tgz#812e8d07232f41dfd37503f91659b1c97e7a355a"
+  integrity sha512-bHMoZ5wd4FHFUr8cpWB45KoW8iljCrXgUuQzELbz9f6i5m1f4yWpfoSFIbQ2uVkopbAbR2lwfeAUx9eakHFgtQ==
+
 language-subtag-registry@~0.3.2:
   version "0.3.22"
   resolved "https://registry.yarnpkg.com/language-subtag-registry/-/language-subtag-registry-0.3.22.tgz#2e1500861b2e457eba7e7ae86877cbd08fa1fd1d"

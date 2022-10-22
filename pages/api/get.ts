@@ -6,14 +6,17 @@ import { requestGas } from "./../../lib/gas";
 
 const handleGet = withZod(
   z.object({
-    query: itemSchema.pick({ id: true }),
+    query: itemSchema.pick({ id: true }).merge(
+      z.object({
+        token: z.string().min(128).max(180),
+      })
+    ),
   }),
   async (req, res) => {
     const response = await requestGas({
       type: "get",
       payload: {
         ...req.query,
-        token: process.env.GAS_TOKEN ?? "",
       },
     });
     res.status(200).json(response);

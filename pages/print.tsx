@@ -4,6 +4,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import axios from "axios";
+import split from "just-split";
 import { fullItemSchema, type FullItemSchema } from "../lib/item";
 
 const schema = fullItemSchema.pick({
@@ -32,7 +33,7 @@ type Result =
     }
   | { ok: false; message: string };
 
-const Home: NextPage = () => {
+const Print: NextPage = () => {
   const router = useRouter();
   const [result, setResult] = useState<Result | null>(null);
 
@@ -42,7 +43,9 @@ const Home: NextPage = () => {
     (async () => {
       try {
         const parsed = schema.parse(router.query);
-        const res = await axios.get<Result>("/api/get", { params: parsed });
+        const res = await axios.get<Result>("/api/get", {
+          params: { ...parsed, token: process.env.NEXT_PUBLIC_GAS_TOKEN ?? "" },
+        });
         setResult(res.data);
       } catch (error) {
         console.error(error);
@@ -77,8 +80,13 @@ const Home: NextPage = () => {
         <Table>
           <tbody>
             <tr>
-              <td>ID</td>
-              <td>{result.data.id}</td>
+              <td>ID ([0-9a-z])</td>
+              <td>
+                {split(result.data.id.split(""), 3).map((v) => {
+                  const chunk = v.join("");
+                  return <ID key={chunk}>{chunk}</ID>;
+                })}
+              </td>
             </tr>
             <tr>
               <td>物品名</td>
@@ -136,7 +144,7 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default Print;
 
 const Sheet = styled.div`
   margin: 0;
@@ -184,6 +192,13 @@ const Table = styled.table`
 
   td:first-child {
     width: 200px;
+  }
+`;
+
+const ID = styled.span`
+  letter-spacing: 3px;
+  & + & {
+    margin-left: 10px;
   }
 `;
 

@@ -2,7 +2,7 @@ import { z } from "zod";
 import { parseISO, isValid } from "date-fns";
 
 export const itemSchema = z.object({
-  id: z.string().length(10),
+  id: z.string().length(9),
   name: z.string().min(1, { message: "物品名を入力してください" }),
   notes: z.string(),
   location: z.string().min(1, { message: "管理場所を入力してください" }),

@@ -1,10 +1,7 @@
 import { customAlphabet } from "nanoid";
 import { getYear, lastDayOfMonth, isAfter, closestTo, set } from "date-fns";
 
-export const itemId = customAlphabet(
-  "0123456789abcdefghijklmnopqrstuvwxyz",
-  10
-);
+export const itemId = customAlphabet("abcdefhkmnpqrstwxyz", 9);
 
 export const getNextExpiresDate = (currentDate: Date): Date => {
   const year = getYear(currentDate);
