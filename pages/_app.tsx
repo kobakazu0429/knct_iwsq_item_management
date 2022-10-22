@@ -1,13 +1,22 @@
 import "../styles/globals.css";
 import "../styles/print.css";
-import { useEffect } from "react";
-import type { AppProps } from "next/app";
+import { useEffect, type ReactElement, type ReactNode } from "react";
+import { type NextPage } from "next";
+import { type AppProps } from "next/app";
 import { useRouter } from "next/router";
 import { createTheme, ThemeProvider } from "smarthr-ui";
 
 const theme = createTheme({});
 
-function MyApp({ Component, pageProps }: AppProps) {
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const router = useRouter();
   useEffect(() => {
     if (router.pathname.startsWith("/print")) {
@@ -15,11 +24,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
   }, [router.pathname]);
 
+  const getLayout = Component.getLayout ?? ((page) => page);
+
   return (
     <ThemeProvider theme={theme}>
-      <Component {...pageProps} />
+      {getLayout(<Component {...pageProps} />)}
     </ThemeProvider>
   );
 }
-
-export default MyApp;

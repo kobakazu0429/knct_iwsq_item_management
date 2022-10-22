@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import styled from "styled-components";
 import axios from "axios";
 import split from "just-split";
-import { fullItemSchema, type FullItemSchema } from "../lib/item";
+import { fullItemSchema, type FullItemSchema } from "../../lib/item";
 
 const schema = fullItemSchema.pick({
   id: true,
@@ -80,7 +80,7 @@ const Print: NextPage = () => {
         <Table>
           <tbody>
             <tr>
-              <td>ID ([0-9a-z])</td>
+              <td>ID ([a-z])</td>
               <td>
                 {split(result.data.id.split(""), 3).map((v) => {
                   const chunk = v.join("");
