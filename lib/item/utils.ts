@@ -6,7 +6,7 @@ export const itemId = customAlphabet(
   10
 );
 
-export const getNextExpiresDate = (currentDate: Date) => {
+export const getNextExpiresDate = (currentDate: Date): Date => {
   const year = getYear(currentDate);
   const EXPIRES_MONTH = [1, 7] as const;
   const expiresDates = EXPIRES_MONTH.map((m) => [
@@ -25,5 +25,5 @@ export const getNextExpiresDate = (currentDate: Date) => {
   return closestTo(
     currentDate,
     expiresDates.filter((date) => isAfter(date, currentDate))
-  );
+  )!;
 };

@@ -1,7 +1,7 @@
 import { useId, type FC } from "react";
 import { FormGroup, Input, Text } from "smarthr-ui";
 import { type UseFormRegister } from "react-hook-form";
-import { type Schema } from "./Form";
+import { type ItemSchema } from "../lib/item";
 
 export const InputGroup: FC<{
   label: string;
@@ -10,8 +10,8 @@ export const InputGroup: FC<{
   hint?: string;
   readOnly?: boolean;
   trailingVisual?: string;
-  register?: UseFormRegister<Schema>;
-  registerName?: keyof Schema;
+  register?: UseFormRegister<ItemSchema>;
+  registerName?: keyof ItemSchema;
 }> = ({
   label,
   required,

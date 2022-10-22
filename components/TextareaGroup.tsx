@@ -1,23 +1,22 @@
 import {
+  useState,
   useCallback,
   useEffect,
   useId,
-  useState,
   type FC,
   type ComponentPropsWithoutRef,
 } from "react";
-import { FormGroup, Text, DatePicker } from "smarthr-ui";
+import { FormGroup, Textarea, Text } from "smarthr-ui";
 import {
   useWatch,
   type UseFormRegister,
   type UseFormSetValue,
   type Control,
 } from "react-hook-form";
-import { addYears, format } from "date-fns";
-import styled from "styled-components";
 import { type ItemSchema } from "../lib/item";
+import styled from "styled-components";
 
-export const DatePickerGroup: FC<{
+export const TextareaGroup: FC<{
   label: string;
   required?: boolean;
   error?: string;
@@ -39,32 +38,24 @@ export const DatePickerGroup: FC<{
   setValue: setFormValue,
 }) => {
   const id = useId();
+
   const reactHookFormValue = useWatch<ItemSchema>({
     control,
     name: registerName,
   });
 
-  const formatter = (date: Date | string) => {
-    if (typeof date === "string") {
-      return date;
-    } else if (date instanceof Date) {
-      return format(date, "yyyy/MM/dd");
-    }
-    return "";
-  };
-
-  const [value, setValue] = useState<string>(formatter(reactHookFormValue));
+  const [value, setValue] = useState(reactHookFormValue);
 
   useEffect(() => {
-    setValue(formatter(reactHookFormValue));
+    setValue(reactHookFormValue);
   }, [reactHookFormValue]);
 
-  const handleChangeDate: NonNullable<
-    ComponentPropsWithoutRef<typeof DatePicker>["onChangeDate"]
+  const handleChange: NonNullable<
+    ComponentPropsWithoutRef<typeof Textarea>["onChange"]
   > = useCallback(
-    (_date, value) => {
-      setValue(value);
-      setFormValue(registerName, value);
+    (e) => {
+      setValue(e.target.value);
+      setFormValue(registerName, e.target.value);
     },
     [registerName, setFormValue]
   );
@@ -78,31 +69,26 @@ export const DatePickerGroup: FC<{
       ]
     : undefined;
 
-  const form = (register && registerName && register(registerName)) ?? {};
+  const { onChange, ...form } =
+    (register && registerName && register(registerName)) ?? {};
 
-  const today = new Date();
-  const from = today;
-  const to = addYears(today, 1);
   return (
     <div>
       <FormGroup
         title={label}
-        titleType="subBlockTitle"
+        titleType="subSubBlockTitle"
         statusLabelProps={statusLabelProps}
         htmlFor={id}
         errorMessages={error}
       >
-        <FullWidthDatePicker
-          value={value}
-          type="date"
+        <StyledTextarea
           id={id}
           width="100%"
-          from={from}
-          to={to}
           readOnly={readOnly}
           disabled={readOnly}
           error={!!error}
-          onChangeDate={handleChangeDate}
+          value={value}
+          onChange={handleChange}
           {...form}
         />
       </FormGroup>
@@ -111,6 +97,6 @@ export const DatePickerGroup: FC<{
   );
 };
 
-const FullWidthDatePicker = styled(DatePicker)`
-  width: 100%;
+const StyledTextarea = styled(Textarea)`
+  resize: vertical;
 `;

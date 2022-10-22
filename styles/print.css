@@ -1,0 +1,21 @@
+@page {
+  margin: 0;
+  size: A4;
+}
+
+body.A4 {
+  margin: 0;
+}
+
+@media screen {
+  body.A4 {
+    background: #e0e0e0;
+  }
+}
+
+/** Fix for Chrome issue #273306 **/
+@media print {
+  body.A4 {
+    width: 210mm;
+  }
+}

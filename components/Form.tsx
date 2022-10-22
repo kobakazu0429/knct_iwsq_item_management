@@ -2,40 +2,20 @@ import { useCallback, type FC } from "react";
 import { Stack, Cluster, Button } from "smarthr-ui";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { getNextExpiresDate, itemId } from "../utils/item";
+import axios from "axios";
+import { getNextExpiresDate, itemId } from "../lib/item/utils";
 import { InputGroup } from "./InputGroup";
 import { DatePickerGroup } from "./DatePickerGroup";
+import { itemSchema, type ItemSchema } from "../lib/item";
+import { formatISO } from "date-fns";
+import { TextareaGroup } from "./TextareaGroup";
 
-const schema = z.object({
-  id: z.string().length(10),
-  name: z.string().min(1, { message: "物品名を入力してください" }),
-  location: z.string().min(1, { message: "管理場所を入力してください" }),
-  chief_id: z.string().min(6, { message: "責任者の学生番号は6桁です" }),
-  chief_name: z.string().min(1, { message: "責任者名を入力してください" }),
-  chief_department: z
-    .string()
-    .min(1, { message: "責任者の所属を入力してください" }),
-  chief_email: z
-    .string()
-    .refine((val) => !val.includes("@"), {
-      message: "@から前のみ入力してください",
-    })
-    .refine((val) => /^(M|E|C|A|S)\d{2}-[a-z]{4}$/gi.test(val), {
-      message:
-        "メールアドレスの書式が異なります /^(M|E|C|A|S)d{2}-[a-z]{4}$/gi",
-    }),
-  expires_at: z.date(),
-  confirmed_ta_name: z
-    .string()
-    .min(1, { message: "確認したTAの名前を入力してください" }),
-});
-
-export type Schema = z.infer<typeof schema>;
+const expires_at = formatISO(getNextExpiresDate(new Date()));
 
 const defaultValues = {
+  notes: "",
   location: "スクエア廊下",
-  expires_at: getNextExpiresDate(new Date()),
+  expires_at: expires_at.includes("+") ? expires_at.split("+")[0] : expires_at,
 };
 
 export const Form: FC = () => {
@@ -44,22 +24,27 @@ export const Form: FC = () => {
     control,
     setValue,
     reset,
-    handleSubmit,
+    handleSubmit: submit,
     formState: { errors },
-  } = useForm<Schema>({
+  } = useForm<ItemSchema>({
     defaultValues: {
       id: itemId(),
       ...defaultValues,
     },
-    resolver: zodResolver(schema, {}, { mode: "sync" }),
+    resolver: zodResolver(itemSchema, {}, { mode: "sync" }),
   });
 
   const handleReset = useCallback(() => {
     reset({ id: itemId(), ...defaultValues });
   }, [reset]);
 
+  const handleSubmit = useCallback(async (d: any) => {
+    console.log(d);
+    axios.post("/api/new", d);
+  }, []);
+
   return (
-    <form onSubmit={handleSubmit((d) => console.log(d))}>
+    <form onSubmit={submit(handleSubmit)}>
       <Stack gap="XL">
         <InputGroup label="ID" readOnly register={register} registerName="id" />
 
@@ -70,6 +55,16 @@ export const Form: FC = () => {
           error={errors.name?.message}
           register={register}
           registerName="name"
+        />
+
+        <TextareaGroup
+          label="危険物など特記事項"
+          hint="「薬品やバッテリー」などが危険物がある場合は分かりやすく記入してください。判断が難しい場合はTAに相談してください。"
+          error={errors.notes?.message}
+          register={register}
+          registerName="notes"
+          control={control}
+          setValue={setValue}
         />
 
         <InputGroup

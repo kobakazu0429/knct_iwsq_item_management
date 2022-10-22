@@ -26,6 +26,7 @@ export default Home;
 const Container = styled.div`
   padding: 2rem;
 `;
+
 const Main = styled.main`
   display: flex;
   flex-direction: column;

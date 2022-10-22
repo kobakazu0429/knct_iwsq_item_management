@@ -1,5 +1,5 @@
 import { parseISO } from "date-fns";
-import { getNextExpiresDate } from "./item";
+import { getNextExpiresDate } from "./utils";
 
 it("日付が7月末より前である時", () => {
   const date = parseISO("2022-04-01T00:00:00");
