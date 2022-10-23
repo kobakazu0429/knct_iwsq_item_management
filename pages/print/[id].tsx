@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -57,6 +57,16 @@ const Print: NextPage = () => {
     })();
   }, [router]);
 
+  const qrImageSrc = useMemo(() => {
+    if (!result?.ok) return "";
+
+    const detailPage = location.origin + `/detail/${result.data.id}`;
+    const imgSrc = `https://qr.kobakazu0429.workers.dev/api/v1/?text=${encodeURIComponent(
+      detailPage
+    )}&type=png&ec_level=Q`;
+    return imgSrc;
+  }, [result]);
+
   if (!result || !result.ok) return <div>loading...</div>;
 
   return (
@@ -114,9 +124,7 @@ const Print: NextPage = () => {
             <tr>
               <td>詳細</td>
               <td>
-                <QR
-                  src={`https://qr.kobakazu0429.workers.dev/api/v1/?text=${result.data.id}&type=png&ec_level=Q`}
-                />
+                <QR src={qrImageSrc} />
               </td>
             </tr>
           </tbody>
