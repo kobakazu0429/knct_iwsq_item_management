@@ -1,12 +1,11 @@
-import { useCallback, type FC } from "react";
+import { useCallback, useMemo, type FC } from "react";
 import { Stack, Cluster, Button } from "smarthr-ui";
-import { useForm } from "react-hook-form";
+import { useForm, type UseFormHandleSubmit } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { getNextExpiresDate, itemId } from "../lib/item/utils";
 import { InputGroup } from "./InputGroup";
 import { DatePickerGroup } from "./DatePickerGroup";
-import { itemSchema, type ItemSchema } from "../lib/item";
+import { itemSchema, type ItemSchema, type FullItemSchema } from "../lib/item";
 import { formatISO } from "date-fns";
 import { TextareaGroup } from "./TextareaGroup";
 
@@ -18,7 +17,21 @@ const defaultValues = {
   expires_at: expires_at.includes("+") ? expires_at.split("+")[0] : expires_at,
 };
 
-export const Form: FC = () => {
+interface Props {
+  defaultValues?: Partial<FullItemSchema>;
+  onSubmit: Parameters<UseFormHandleSubmit<ItemSchema>>[0];
+}
+
+export const Form: FC<Props> = (props) => {
+  const defaultValuesForReset = useMemo(
+    () => ({
+      id: itemId(),
+      ...defaultValues,
+      ...props.defaultValues,
+    }),
+    [props.defaultValues]
+  );
+
   const {
     register,
     control,
@@ -27,24 +40,16 @@ export const Form: FC = () => {
     handleSubmit: submit,
     formState: { errors },
   } = useForm<ItemSchema>({
-    defaultValues: {
-      id: itemId(),
-      ...defaultValues,
-    },
+    defaultValues: defaultValuesForReset,
     resolver: zodResolver(itemSchema, {}, { mode: "sync" }),
   });
 
   const handleReset = useCallback(() => {
-    reset({ id: itemId(), ...defaultValues });
-  }, [reset]);
-
-  const handleSubmit = useCallback(async (d: any) => {
-    console.log(d);
-    axios.post("/api/new", d);
-  }, []);
+    reset({ ...defaultValuesForReset });
+  }, [reset, defaultValuesForReset]);
 
   return (
-    <form onSubmit={submit(handleSubmit)}>
+    <form onSubmit={submit(props.onSubmit)}>
       <Stack gap="XL">
         <InputGroup label="ID" readOnly register={register} registerName="id" />
 
