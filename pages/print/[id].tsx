@@ -114,7 +114,9 @@ const Print: NextPage = () => {
             <tr>
               <td>詳細</td>
               <td>
-                <QR src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/QR_code_desktop_Japanese_Wikipedia.svg/640px-QR_code_desktop_Japanese_Wikipedia.svg.png" />
+                <QR
+                  src={`https://qr.kobakazu0429.workers.dev/api/v1/?text=${result.data.id}&type=png&ec_level=Q`}
+                />
               </td>
             </tr>
           </tbody>
@@ -204,5 +206,5 @@ const ID = styled.span`
 
 const QR = styled.img`
   width: 100%;
-  max-width: 200px;
+  max-width: 150px;
 `;
