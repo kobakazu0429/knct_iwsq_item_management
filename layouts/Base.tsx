@@ -5,6 +5,7 @@ import {
   Header,
   HeaderLink,
   Text,
+  FaEditIcon,
   FaPlusIcon,
   FaPrintIcon,
   FaDatabaseIcon,
@@ -33,6 +34,9 @@ export const BaseLayout = ({ children }: LayoutProps) => {
       >
         <Link href="/new" passHref>
           <SelfHeaderLink prefix={<FaPlusIcon />}>新規作成</SelfHeaderLink>
+        </Link>
+        <Link href="/detail" passHref>
+          <SelfHeaderLink prefix={<FaEditIcon />}>詳細/編集</SelfHeaderLink>
         </Link>
         <Link href="/print" passHref>
           <SelfHeaderLink prefix={<FaPrintIcon />}>印刷</SelfHeaderLink>
