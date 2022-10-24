@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 import styled from "styled-components";
 import axios from "axios";
 import split from "just-split";
+import { parseISO } from "date-fns";
+import { utcToZonedTime, format } from "date-fns-tz";
 import { fullItemSchema, type FullItemSchema } from "../../lib/item";
 
 const schema = fullItemSchema.pick({
@@ -32,6 +34,9 @@ type Result =
       data: Data;
     }
   | { ok: false; message: string };
+
+const formatDate = (isoDate: string) =>
+  format(parseISO(isoDate), "yyyy/MM/dd HH:mm:ss", { timeZone: "Asia/Tokyo" });
 
 const Print: NextPage = () => {
   const router = useRouter();
@@ -125,6 +130,7 @@ const Print: NextPage = () => {
               <td>詳細</td>
               <td>
                 <QR src={qrImageSrc} />
+                <Text>メールアドレスなど詳細情報が確認できます。</Text>
               </td>
             </tr>
           </tbody>
@@ -134,15 +140,15 @@ const Print: NextPage = () => {
           <tbody>
             <tr>
               <td>申請日</td>
-              <td>{result.data.created_at}</td>
+              <td>{formatDate(result.data.created_at)}</td>
             </tr>
             <tr>
               <td>更新日</td>
-              <td>{result.data.updated_at}</td>
+              <td>{formatDate(result.data.updated_at)}</td>
             </tr>
             <tr>
               <td>期限</td>
-              <td>{result.data.expires_at}</td>
+              <td>{formatDate(result.data.expires_at)}</td>
             </tr>
           </tbody>
         </Table>
@@ -215,4 +221,8 @@ const ID = styled.span`
 const QR = styled.img`
   width: 100%;
   max-width: 150px;
+`;
+
+const Text = styled.p`
+  font-size: 16px;
 `;
