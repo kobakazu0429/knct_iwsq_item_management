@@ -51,7 +51,9 @@ const Home: NextPageWithLayout = () => {
               </Link>
             </li>
             <li>
-              <AnchorButton wide>編集</AnchorButton>
+              <Link href="/detail" passHref>
+                <AnchorButton wide>編集</AnchorButton>
+              </Link>
             </li>
             <li>
               <AnchorButton
