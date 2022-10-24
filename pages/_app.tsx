@@ -20,7 +20,9 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const router = useRouter();
   useEffect(() => {
     if (router.pathname.startsWith("/print")) {
-      document.body.className = "A4";
+      document.body.classList.add("A4");
+    } else {
+      document.body.classList.remove("A4");
     }
   }, [router.pathname]);
 
