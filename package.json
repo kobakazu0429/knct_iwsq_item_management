@@ -23,6 +23,7 @@
     "react-toastify": "^9.0.8",
     "smarthr-ui": "^23.2.0",
     "styled-components": "^5.3.6",
+    "ts-pattern": "^4.0.5",
     "zod": "^3.19.1"
   },
   "devDependencies": {
