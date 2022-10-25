@@ -20,35 +20,15 @@ export const itemSchema = z.object({
       message:
         "メールアドレスの書式が異なります /^(M|E|C|A|S)d{2}-[a-z]{4}$/gi",
     }),
+  chief_email_verified: z.boolean(),
+  chief_email_verified_token: z.string().length(24),
+  status: z.enum(["verifying", "keeping", "removed", "removing"] as const),
+  created_at: z.string().refine((val) => isValid(parseISO(val))),
+  updated_at: z.string().refine((val) => isValid(parseISO(val))),
   expires_at: z.string().refine((val) => isValid(parseISO(val))),
   confirmed_ta_name: z
     .string()
     .min(1, { message: "確認したTAの名前を入力してください" }),
 });
+
 export type ItemSchema = z.infer<typeof itemSchema>;
-
-export const chiefEmailVerifiedTokenSchema = z.object({
-  chief_email_verified_token: z.string().length(24),
-});
-export type ChiefEmailVerifiedTokenSchema = z.infer<
-  typeof chiefEmailVerifiedTokenSchema
->;
-
-export const itemSchemaWithChiefEmailVerifiedTokenSchema = itemSchema.merge(
-  chiefEmailVerifiedTokenSchema
-);
-
-export type ItemSchemaWithChiefEmailVerifiedTokenSchema = z.infer<
-  typeof itemSchemaWithChiefEmailVerifiedTokenSchema
->;
-
-export const otherDateSchema = z.object({
-  created_at: z.string().refine((val) => isValid(parseISO(val))),
-  updated_at: z.string().refine((val) => isValid(parseISO(val))),
-});
-
-export const fullItemSchema = itemSchema
-  .merge(chiefEmailVerifiedTokenSchema)
-  .merge(otherDateSchema);
-
-export type FullItemSchema = z.infer<typeof fullItemSchema>;
