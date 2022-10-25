@@ -53,7 +53,8 @@ const Verify: NextPage = (props) => {
         console.error(error);
         setResult({
           ok: false,
-          message: "認証に失敗しました。TAにご確認ください。",
+          message:
+            "予期せぬエラーにより認証に失敗しました。TAにご確認ください。",
         });
       }
     })();
@@ -70,8 +71,11 @@ const Verify: NextPage = (props) => {
     );
   }
 
+  const status = result.ok ? "認証に成功しました。" : "認証に失敗しました。";
+
   return (
     <Base>
+      <Text as="p">{status}</Text>
       <Text as="p">{result?.message}</Text>
       <Text as="p">画面を閉じても大丈夫です。</Text>
     </Base>

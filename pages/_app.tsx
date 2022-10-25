@@ -1,9 +1,11 @@
 import "../styles/globals.css";
 import "../styles/print.css";
+import "react-toastify/dist/ReactToastify.css";
 import { useEffect, type ReactElement, type ReactNode } from "react";
 import { type NextPage } from "next";
 import { type AppProps } from "next/app";
 import { useRouter } from "next/router";
+import { ToastContainer } from "react-toastify";
 import { createTheme, ThemeProvider } from "smarthr-ui";
 
 const theme = createTheme({});
@@ -30,6 +32,7 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
   return (
     <ThemeProvider theme={theme}>
+      <ToastContainer newestOnTop />
       {getLayout(<Component {...pageProps} />)}
     </ThemeProvider>
   );

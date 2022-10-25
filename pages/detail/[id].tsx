@@ -4,6 +4,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { Heading } from "smarthr-ui";
 import styled from "styled-components";
+import { toast } from "react-toastify";
 import axios from "axios";
 import {
   fullItemSchema,
@@ -50,6 +51,9 @@ const Detail: NextPage = () => {
   const handleSubmit = useCallback(async (data: ItemSchema) => {
     console.log(data);
     // axios.post("/api/new", data);
+    toast.warn(
+      "更新機能は作成中です。本変更は保存されませんのでご注意ください。"
+    );
   }, []);
 
   if (!result || !result.ok) return <div>loading...</div>;
