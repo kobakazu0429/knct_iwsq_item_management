@@ -5,16 +5,15 @@ import { useRouter } from "next/router";
 import styled from "styled-components";
 import axios from "axios";
 import split from "just-split";
-import { parseISO } from "date-fns";
-import { utcToZonedTime, format } from "date-fns-tz";
-import { fullItemSchema, type FullItemSchema } from "../../lib/item";
+import { itemSchema, type ItemSchema } from "../../lib/item";
+import { formatDate } from "../../lib/item/utils";
 
-const schema = fullItemSchema.pick({
+const schema = itemSchema.pick({
   id: true,
 });
 
 type Data = Pick<
-  FullItemSchema,
+  ItemSchema,
   | "id"
   | "name"
   | "notes"
@@ -34,9 +33,6 @@ type Result =
       data: Data;
     }
   | { ok: false; message: string };
-
-const formatDate = (isoDate: string) =>
-  format(parseISO(isoDate), "yyyy/MM/dd HH:mm:ss", { timeZone: "Asia/Tokyo" });
 
 const Print: NextPage = () => {
   const router = useRouter();
