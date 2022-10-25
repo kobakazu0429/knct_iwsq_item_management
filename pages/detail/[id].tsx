@@ -1,30 +1,27 @@
 import { useCallback, useEffect, useState } from "react";
-import type { NextPage } from "next";
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { Heading } from "smarthr-ui";
-import styled from "styled-components";
+import { Stack, Cluster, AnchorButton, Heading } from "smarthr-ui";
 import { toast } from "react-toastify";
 import axios from "axios";
-import {
-  fullItemSchema,
-  type ItemSchema,
-  type FullItemSchema,
-} from "../../lib/item";
-import { Form } from "../../components/Form";
+import { type NextPageWithLayout } from "../_app";
+import { getCenterLayout } from "../../layouts/Center";
+import { itemSchema, type ItemSchema } from "../../lib/item";
+import { DetailTable } from "../../components/DetailTable";
 
-const schema = fullItemSchema.pick({
+const schema = itemSchema.pick({
   id: true,
 });
 
 type Result =
   | {
       ok: true;
-      data: FullItemSchema;
+      data: ItemSchema;
     }
   | { ok: false; message: string };
 
-const Detail: NextPage = () => {
+const Detail: NextPageWithLayout = () => {
   const router = useRouter();
   const [result, setResult] = useState<Result | null>(null);
 
@@ -58,35 +55,32 @@ const Detail: NextPage = () => {
 
   if (!result || !result.ok) return <div>loading...</div>;
 
-  result.data.chief_email = result.data.chief_email.split("@")[0];
-
   return (
     <>
       <Head>
-        <title>インキュベーションスクエア 物品保管証明書 詳細/編集</title>
+        <title>インキュベーションスクエア 物品保管証明書 詳細</title>
       </Head>
 
-      <Container>
-        <Main>
-          <Heading type="screenTitle" tag="h1">
-            詳細/編集
-          </Heading>
-          <Form defaultValues={result.data} onSubmit={handleSubmit} />
-        </Main>
-      </Container>
+      <Heading type="screenTitle" tag="h1">
+        詳細
+      </Heading>
+
+      <Stack gap="XL">
+        <DetailTable item={result.data} />
+
+        <Cluster justify="flex-end">
+          <Link href={`/edit/${result.data.id}`} passHref>
+            <AnchorButton>編集する</AnchorButton>
+          </Link>
+          <Link href={`/print/${result.data.id}`} passHref>
+            <AnchorButton>印刷する</AnchorButton>
+          </Link>
+        </Cluster>
+      </Stack>
     </>
   );
 };
 
 export default Detail;
 
-const Container = styled.div`
-  padding: 2rem;
-`;
-
-const Main = styled.main`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
+Detail.getLayout = getCenterLayout;

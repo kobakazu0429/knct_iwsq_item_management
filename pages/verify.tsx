@@ -1,13 +1,13 @@
 import { FC, ReactNode, useEffect, useState } from "react";
-import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import axios from "axios";
-import styled from "styled-components";
 import { Heading, Stack, Loader, Text } from "smarthr-ui";
-import { itemSchemaWithChiefEmailVerifiedTokenSchema } from "../lib/item";
+import { type NextPageWithLayout } from "./_app";
+import { getCenterLayout } from "../layouts/Center";
+import { itemSchema } from "../lib/item";
 
-const schema = itemSchemaWithChiefEmailVerifiedTokenSchema.pick({
+const schema = itemSchema.pick({
   id: true,
   chief_email_verified_token: true,
 });
@@ -23,21 +23,18 @@ const Base: FC<{ children: ReactNode }> = (props) => {
       <Head>
         <title>インキュベーションスクエア 物品保管証明書 認証</title>
       </Head>
-      <Container>
-        <Main>
-          <Stack gap="XL" align="center">
-            <Heading type="screenTitle" tag="h1">
-              認証
-            </Heading>
-            {props.children}
-          </Stack>
-        </Main>
-      </Container>
+
+      <Stack gap="XL" align="center">
+        <Heading type="screenTitle" tag="h1">
+          認証
+        </Heading>
+        {props.children}
+      </Stack>
     </>
   );
 };
 
-const Verify: NextPage = (props) => {
+const Verify: NextPageWithLayout = (props) => {
   const [result, setResult] = useState<Result | null>(null);
   const router = useRouter();
 
@@ -84,14 +81,4 @@ const Verify: NextPage = (props) => {
 
 export default Verify;
 
-const Container = styled.div`
-  padding: 2rem;
-`;
-
-const Main = styled.main`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-`;
+Verify.getLayout = getCenterLayout;

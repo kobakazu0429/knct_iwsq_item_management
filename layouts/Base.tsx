@@ -12,7 +12,7 @@ import {
   FaQuestionCircleIcon,
 } from "smarthr-ui";
 
-type LayoutProps = Required<{
+export type LayoutProps = Required<{
   readonly children: ReactElement;
 }>;
 
@@ -58,6 +58,10 @@ export const BaseLayout = ({ children }: LayoutProps) => {
       {children}
     </>
   );
+};
+
+export const getBaseLayout = (page: ReactElement) => {
+  return <BaseLayout>{page}</BaseLayout>;
 };
 
 const StyledHeader = styled(Header)`

@@ -1,12 +1,11 @@
-import { useCallback, type ReactElement } from "react";
+import { useCallback } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { Heading } from "smarthr-ui";
-import styled from "styled-components";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { type NextPageWithLayout } from "./_app";
-import { BaseLayout } from "../layouts/Base";
+import { getCenterLayout } from "../layouts/Center";
 import { Form } from "../components/Form";
 import { type ItemSchema } from "../lib/item";
 
@@ -43,34 +42,19 @@ const New: NextPageWithLayout = () => {
   );
 
   return (
-    <Container>
+    <>
       <Head>
         <title>インキュベーションスクエア物品管理システム - 登録</title>
       </Head>
 
-      <Main>
-        <Heading type="screenTitle" tag="h1">
-          新規登録
-        </Heading>
-        <Form onSubmit={handleSubmit} />
-      </Main>
-    </Container>
+      <Heading type="screenTitle" tag="h1">
+        新規登録
+      </Heading>
+      <Form onSubmit={handleSubmit} />
+    </>
   );
 };
 
 export default New;
 
-New.getLayout = function getLayout(page: ReactElement) {
-  return <BaseLayout>{page}</BaseLayout>;
-};
-
-const Container = styled.div`
-  padding: 2rem;
-`;
-
-const Main = styled.main`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
+New.getLayout = getCenterLayout;

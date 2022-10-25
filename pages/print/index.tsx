@@ -1,4 +1,4 @@
-import { useCallback, useRef, type ReactElement } from "react";
+import { useCallback, useRef } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import {
@@ -10,9 +10,9 @@ import {
   useTheme,
   FaQrcodeIcon,
 } from "smarthr-ui";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { type NextPageWithLayout } from "../_app";
-import { BaseLayout } from "../../layouts/Base";
+import { getHomeLayout } from "../../layouts/Home";
 
 type Theme = ReturnType<typeof useTheme>;
 
@@ -33,59 +33,34 @@ const PrintHome: NextPageWithLayout = () => {
         <title>インキュベーションスクエア物品管理システム 印刷</title>
       </Head>
 
-      <Container themes={themes}>
-        <Heading type="screenTitle" tag="h1">
-          インキュベーションスクエア物品管理システム
-        </Heading>
-        <div>
-          <Text as="p">掲示用のA4用紙を印刷するためのページです。</Text>
-          <Text as="p">
-            物品ID(アルファベット9文字)を入力するかQRコードを読み取ってください
-          </Text>
-        </div>
-        <Box>
-          <List>
-            <li>
-              <Input
-                prefix={<FaQrcodeIcon />}
-                width="100%"
-                ref={ref}
-                autoFocus
-              />
-            </li>
-            <li>
-              <Button wide onClick={handleClick}>
-                印刷プレビューへ移動する
-              </Button>
-            </li>
-          </List>
-        </Box>
-      </Container>
+      <Heading type="screenTitle" tag="h1">
+        インキュベーションスクエア物品管理システム
+      </Heading>
+      <div>
+        <Text as="p">掲示用のA4用紙を印刷するためのページです。</Text>
+        <Text as="p">
+          物品ID(アルファベット9文字)を入力するかQRコードを読み取ってください
+        </Text>
+      </div>
+      <Box>
+        <List>
+          <li>
+            <Input prefix={<FaQrcodeIcon />} width="100%" ref={ref} autoFocus />
+          </li>
+          <li>
+            <Button wide onClick={handleClick}>
+              印刷プレビューへ移動する
+            </Button>
+          </li>
+        </List>
+      </Box>
     </>
   );
 };
 
 export default PrintHome;
 
-PrintHome.getLayout = function getLayout(page: ReactElement) {
-  return <BaseLayout>{page}</BaseLayout>;
-};
-
-const Container = styled.main<{ themes: Theme }>`
-  ${({ themes }) => {
-    const { color } = themes;
-    return css`
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      align-items: center;
-      text-align: left;
-      height: calc(100vh - 48px);
-      background-color: ${color.BACKGROUND};
-      gap: 32px;
-    `;
-  }}
-`;
+PrintHome.getLayout = getHomeLayout;
 
 const Box = styled(Base)`
   width: 400px;
