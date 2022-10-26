@@ -2,12 +2,13 @@ import { randomBytes } from "node:crypto";
 import { type NextApiHandler } from "next";
 import { z } from "zod";
 import { withZod } from "../../lib/next/withZod";
-import { itemSchema } from "./../../lib/item";
-import { requestGas } from "./../../lib/gas";
+import { requestGas, newRequestSchema } from "./../../lib/gas";
 
 const handlePost = withZod(
   z.object({
-    body: itemSchema,
+    body: newRequestSchema.shape.payload.omit({
+      chief_email_verified_token: true,
+    }),
   }),
   async (req, res) => {
     const response = await requestGas({

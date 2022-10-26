@@ -1,23 +1,16 @@
 import { type NextApiHandler } from "next";
 import { z } from "zod";
 import { withZod } from "../../lib/next/withZod";
-import { itemSchema } from "./../../lib/item";
-import { requestGas } from "./../../lib/gas";
+import { requestGas, getRequestSchema } from "./../../lib/gas";
 
 const handleGet = withZod(
   z.object({
-    query: itemSchema.pick({ id: true }).merge(
-      z.object({
-        token: z.string().min(128).max(180),
-      })
-    ),
+    query: getRequestSchema.shape.payload,
   }),
   async (req, res) => {
     const response = await requestGas({
       type: "get",
-      payload: {
-        ...req.query,
-      },
+      payload: req.query,
     });
     res.status(200).json(response);
   }

@@ -3,14 +3,10 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import styled from "styled-components";
-import axios from "axios";
 import split from "just-split";
-import { itemSchema, type ItemSchema } from "../../lib/item";
+import { type ItemSchema } from "../../lib/item";
 import { formatDate } from "../../lib/item/utils";
-
-const schema = itemSchema.pick({
-  id: true,
-});
+import { client } from "../../lib/next/apiClient";
 
 type Data = Pick<
   ItemSchema,
@@ -43,10 +39,7 @@ const Print: NextPage = () => {
 
     (async () => {
       try {
-        const parsed = schema.parse(router.query);
-        const res = await axios.get<Result>("/api/get", {
-          params: { ...parsed, token: process.env.NEXT_PUBLIC_GAS_TOKEN ?? "" },
-        });
+        const res = await client.get(router.query);
         setResult(res.data);
       } catch (error) {
         console.error(error);

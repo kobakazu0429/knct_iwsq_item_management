@@ -1,22 +1,13 @@
 import { useCallback, useRef } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import {
-  Button,
-  Base,
-  Heading,
-  Text,
-  Input,
-  useTheme,
-  FaQrcodeIcon,
-} from "smarthr-ui";
+import { Button, Base, Heading, Text, Input, FaQrcodeIcon } from "smarthr-ui";
 import styled from "styled-components";
 import { type NextPageWithLayout } from "../_app";
 import { getHomeLayout } from "../../layouts/Home";
 
 const DetailHome: NextPageWithLayout = () => {
   const router = useRouter();
-  const themes = useTheme();
   const ref = useRef<HTMLInputElement>(null);
 
   const handleClick = useCallback(() => {

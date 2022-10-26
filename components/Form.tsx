@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { getNextExpiresDate, itemId } from "../lib/item/utils";
 import { InputGroup } from "./InputGroup";
 import { DatePickerGroup } from "./DatePickerGroup";
-import { itemSchema, type ItemSchema } from "../lib/item";
+import { itemSchemaForCreate, type ItemSchemaForCreate } from "../lib/item";
 import { formatISO } from "date-fns";
 import { TextareaGroup } from "./TextareaGroup";
 
@@ -18,8 +18,8 @@ const defaultValues = {
 };
 
 interface Props {
-  defaultValues?: Partial<ItemSchema>;
-  onSubmit: Parameters<UseFormHandleSubmit<ItemSchema>>[0];
+  defaultValues?: Partial<ItemSchemaForCreate>;
+  onSubmit: Parameters<UseFormHandleSubmit<ItemSchemaForCreate>>[0];
 }
 
 export const Form: FC<Props> = (props) => {
@@ -39,9 +39,9 @@ export const Form: FC<Props> = (props) => {
     reset,
     handleSubmit: submit,
     formState: { errors },
-  } = useForm<ItemSchema>({
+  } = useForm<ItemSchemaForCreate>({
     defaultValues: defaultValuesForReset,
-    resolver: zodResolver(itemSchema, {}, { mode: "sync" }),
+    resolver: zodResolver(itemSchemaForCreate, {}, { mode: "sync" }),
   });
 
   const handleReset = useCallback(() => {
@@ -49,15 +49,26 @@ export const Form: FC<Props> = (props) => {
   }, [reset, defaultValuesForReset]);
 
   return (
-    <form onSubmit={submit(props.onSubmit)}>
+    <form
+      onSubmit={submit(props.onSubmit, (errors) => {
+        console.log(errors);
+      })}
+    >
       <Stack gap="XL">
-        <InputGroup label="ID" readOnly register={register} registerName="id" />
+        <InputGroup
+          label="ID"
+          readOnly
+          // @ts-expect-error
+          register={register}
+          registerName="id"
+        />
 
         <InputGroup
           label="物品名"
           hint="「IW イス パーツ」のように用途を分かりやすく記入してください"
           required
           error={errors.name?.message}
+          // @ts-expect-error
           register={register}
           registerName="name"
         />
@@ -66,9 +77,12 @@ export const Form: FC<Props> = (props) => {
           label="危険物など特記事項"
           hint="「薬品やバッテリー」などが危険物がある場合は分かりやすく記入してください。判断が難しい場合はTAに相談してください。"
           error={errors.notes?.message}
+          // @ts-expect-error
           register={register}
           registerName="notes"
+          // @ts-expect-error
           control={control}
+          // @ts-expect-error
           setValue={setValue}
         />
 
@@ -76,6 +90,7 @@ export const Form: FC<Props> = (props) => {
           label="保管場所"
           required
           error={errors.location?.message}
+          // @ts-expect-error
           register={register}
           registerName="location"
         />
@@ -84,6 +99,7 @@ export const Form: FC<Props> = (props) => {
           label="責任者の学生番号"
           required
           error={errors.chief_id?.message}
+          // @ts-expect-error
           register={register}
           registerName="chief_id"
         />
@@ -93,6 +109,7 @@ export const Form: FC<Props> = (props) => {
           hint="「高専 太郎」のように入力してください"
           required
           error={errors.chief_name?.message}
+          // @ts-expect-error
           register={register}
           registerName="chief_name"
         />
@@ -102,6 +119,7 @@ export const Form: FC<Props> = (props) => {
           hint="「E1 イスを作ろう」のように学年学科や部活名、テーマ名など入力してください"
           required
           error={errors.chief_department?.message}
+          // @ts-expect-error
           register={register}
           registerName="chief_department"
         />
@@ -111,6 +129,7 @@ export const Form: FC<Props> = (props) => {
           hint="「e17-abcd」のように@kure.kosen-ac.jpで終わるメールアドレスの最初のみ入力してください"
           required
           error={errors.chief_email?.message}
+          // @ts-expect-error
           register={register}
           registerName="chief_email"
           trailingVisual="@kure.kosen-ac.jp"
@@ -120,6 +139,7 @@ export const Form: FC<Props> = (props) => {
           label="保管期限"
           hint="通常は学期末(夏休み前、春休み前)1週間前までです"
           required
+          // @ts-expect-error
           register={register}
           registerName="expires_at"
           // @ts-expect-error
@@ -133,6 +153,7 @@ export const Form: FC<Props> = (props) => {
           hint="物品の保管許可、変更、撤収などの確認をしたTAの名前を入力してください"
           required
           error={errors.confirmed_ta_name?.message}
+          // @ts-expect-error
           register={register}
           registerName="confirmed_ta_name"
         />

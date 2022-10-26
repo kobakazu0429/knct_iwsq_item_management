@@ -32,3 +32,18 @@ export const itemSchema = z.object({
 });
 
 export type ItemSchema = z.infer<typeof itemSchema>;
+
+export const itemSchemaForCreate = itemSchema.pick({
+  id: true,
+  name: true,
+  notes: true,
+  location: true,
+  chief_id: true,
+  chief_name: true,
+  chief_department: true,
+  chief_email: true,
+  expires_at: true,
+  confirmed_ta_name: true,
+});
+
+export type ItemSchemaForCreate = z.infer<typeof itemSchemaForCreate>;

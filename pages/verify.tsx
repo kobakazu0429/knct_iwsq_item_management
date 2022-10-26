@@ -1,21 +1,10 @@
 import { FC, ReactNode, useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import axios from "axios";
 import { Heading, Stack, Loader, Text } from "smarthr-ui";
 import { type NextPageWithLayout } from "./_app";
 import { getCenterLayout } from "../layouts/Center";
-import { itemSchema } from "../lib/item";
-
-const schema = itemSchema.pick({
-  id: true,
-  chief_email_verified_token: true,
-});
-
-interface Result {
-  ok: boolean;
-  message: string;
-}
+import { client, type Response } from "../lib/next/apiClient";
 
 const Base: FC<{ children: ReactNode }> = (props) => {
   return (
@@ -35,7 +24,7 @@ const Base: FC<{ children: ReactNode }> = (props) => {
 };
 
 const Verify: NextPageWithLayout = (props) => {
-  const [result, setResult] = useState<Result | null>(null);
+  const [result, setResult] = useState<Response | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -43,8 +32,7 @@ const Verify: NextPageWithLayout = (props) => {
 
     (async () => {
       try {
-        const parsed = schema.parse(router.query);
-        const res = await axios.post<Result>("/api/verify", parsed);
+        const res = await client.verify(router.query);
         setResult(res.data);
       } catch (error) {
         console.error(error);

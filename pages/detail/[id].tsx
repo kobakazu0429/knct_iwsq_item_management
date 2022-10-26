@@ -4,15 +4,11 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Stack, Cluster, AnchorButton, Heading } from "smarthr-ui";
 import { toast } from "react-toastify";
-import axios from "axios";
 import { type NextPageWithLayout } from "../_app";
 import { getCenterLayout } from "../../layouts/Center";
-import { itemSchema, type ItemSchema } from "../../lib/item";
+import { type ItemSchema } from "../../lib/item";
 import { DetailTable } from "../../components/DetailTable";
-
-const schema = itemSchema.pick({
-  id: true,
-});
+import { client } from "../../lib/next/apiClient";
 
 type Result =
   | {
@@ -30,10 +26,7 @@ const Detail: NextPageWithLayout = () => {
 
     (async () => {
       try {
-        const parsed = schema.parse(router.query);
-        const res = await axios.get<Result>("/api/get", {
-          params: { ...parsed, token: process.env.NEXT_PUBLIC_GAS_TOKEN ?? "" },
-        });
+        const res = await client.get(router.query);
         setResult(res.data);
       } catch (error) {
         console.error(error);
