@@ -25,7 +25,7 @@ const New: NextPageWithLayout = () => {
       console.log(res);
 
       if (!res.data.ok) {
-        toast.error("保存に失敗しました。");
+        toast.error(`保存に失敗しました。\n${res.data.message}`);
         return;
       }
 

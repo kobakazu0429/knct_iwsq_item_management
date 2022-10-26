@@ -44,17 +44,10 @@ export const TextareaGroup: FC<{
     name: registerName,
   });
 
-  const [value, setValue] = useState(reactHookFormValue);
-
-  useEffect(() => {
-    setValue(reactHookFormValue);
-  }, [reactHookFormValue]);
-
   const handleChange: NonNullable<
     ComponentPropsWithoutRef<typeof Textarea>["onChange"]
   > = useCallback(
     (e) => {
-      setValue(e.target.value);
       setFormValue(registerName, e.target.value);
     },
     [registerName, setFormValue]
@@ -88,7 +81,7 @@ export const TextareaGroup: FC<{
           disabled={readOnly}
           error={!!error}
           // @ts-expect-error
-          value={value}
+          value={reactHookFormValue}
           onChange={handleChange}
           {...form}
         />
