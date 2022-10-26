@@ -1,7 +1,22 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+const PUBLIC_FILE = /\.(.*)$/;
+
 export function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+
+  if (
+    pathname.startsWith("/_next") || // exclude Next.js internals
+    pathname.startsWith("/verify") || //  accessible to anyone
+    pathname.startsWith("/api/auth") ||
+    pathname.startsWith("/api/verify") ||
+    pathname.startsWith("/static") || // exclude static files
+    PUBLIC_FILE.test(pathname) // exclude all files in the public folder
+  ) {
+    return NextResponse.next();
+  }
+
   if (process.env.DISABLE_BASIC_AUTH === "true") {
     return NextResponse.next();
   }
@@ -25,15 +40,3 @@ export function middleware(req: NextRequest) {
 
   return NextResponse.rewrite(url);
 }
-
-export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - verify (accessible to anyone)
-     * - static (static files)
-     * - favicon.ico (favicon file)
-     */
-    "/((?!verify|static|favicon.ico).*)",
-  ],
-};
