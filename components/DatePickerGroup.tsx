@@ -15,7 +15,10 @@ import {
 } from "react-hook-form";
 import { addYears, format } from "date-fns";
 import styled from "styled-components";
+import type { OmitByValue } from "utility-types";
 import { type ItemSchema } from "../lib/item";
+
+type OnlyStringValueItemSchema = OmitByValue<ItemSchema, boolean>;
 
 export const DatePickerGroup: FC<{
   label: string;
@@ -24,9 +27,9 @@ export const DatePickerGroup: FC<{
   hint?: string;
   readOnly?: boolean;
   register: UseFormRegister<ItemSchema>;
-  registerName: keyof ItemSchema;
-  control: Control<ItemSchema>;
-  setValue: UseFormSetValue<ItemSchema>;
+  registerName: keyof OnlyStringValueItemSchema;
+  control: Control<OnlyStringValueItemSchema>;
+  setValue: UseFormSetValue<OnlyStringValueItemSchema>;
 }> = ({
   label,
   required,
@@ -39,7 +42,7 @@ export const DatePickerGroup: FC<{
   setValue: setFormValue,
 }) => {
   const id = useId();
-  const reactHookFormValue = useWatch<ItemSchema>({
+  const reactHookFormValue = useWatch<OnlyStringValueItemSchema>({
     control,
     name: registerName,
   });

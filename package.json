@@ -24,6 +24,7 @@
     "smarthr-ui": "^23.2.0",
     "styled-components": "^5.3.6",
     "ts-pattern": "^4.0.5",
+    "utility-types": "^3.10.0",
     "zod": "^3.19.1"
   },
   "devDependencies": {

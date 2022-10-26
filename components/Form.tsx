@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { getNextExpiresDate, itemId } from "../lib/item/utils";
 import { InputGroup } from "./InputGroup";
 import { DatePickerGroup } from "./DatePickerGroup";
-import { itemSchema, type ItemSchema, type FullItemSchema } from "../lib/item";
+import { itemSchema, type ItemSchema } from "../lib/item";
 import { formatISO } from "date-fns";
 import { TextareaGroup } from "./TextareaGroup";
 
@@ -18,7 +18,7 @@ const defaultValues = {
 };
 
 interface Props {
-  defaultValues?: Partial<FullItemSchema>;
+  defaultValues?: Partial<ItemSchema>;
   onSubmit: Parameters<UseFormHandleSubmit<ItemSchema>>[0];
 }
 
@@ -122,7 +122,9 @@ export const Form: FC<Props> = (props) => {
           required
           register={register}
           registerName="expires_at"
+          // @ts-expect-error
           control={control}
+          // @ts-expect-error
           setValue={setValue}
         />
 
