@@ -87,6 +87,7 @@ export const TextareaGroup: FC<{
           readOnly={readOnly}
           disabled={readOnly}
           error={!!error}
+          // @ts-expect-error
           value={value}
           onChange={handleChange}
           {...form}
