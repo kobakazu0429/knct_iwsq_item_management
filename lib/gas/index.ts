@@ -40,6 +40,19 @@ export const getRequestSchema = z.object({
     }),
 });
 
+export const updateRequestSchema = z.object({
+  type: z.literal("update"),
+  payload: itemSchema.pick({
+    id: true,
+    name: true,
+    notes: true,
+    location: true,
+    status: true,
+    confirmed_ta_name: true,
+    expires_at: true,
+  }),
+});
+
 export const getRequestPayloadSchemaOmittedToken =
   getRequestSchema.shape.payload.omit({ token: true });
 

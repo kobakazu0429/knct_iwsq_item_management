@@ -5,52 +5,65 @@ import {
   useId,
   type FC,
   type ComponentPropsWithoutRef,
+  useMemo,
 } from "react";
 import { FormGroup, Textarea, Text } from "smarthr-ui";
 import {
   useWatch,
+  useFormContext,
   type UseFormRegister,
   type UseFormSetValue,
   type Control,
 } from "react-hook-form";
-import { type ItemSchema } from "../lib/item";
+import { ItemSchemaForCreate, type ItemSchema } from "../lib/item";
 import styled from "styled-components";
 
 export const TextareaGroup: FC<{
   label: string;
   required?: boolean;
-  error?: string;
+  // error?: string;
   hint?: string;
   readOnly?: boolean;
-  register: UseFormRegister<ItemSchema>;
+  // register: UseFormRegister<ItemSchema>;
   registerName: keyof ItemSchema;
-  control: Control<ItemSchema>;
-  setValue: UseFormSetValue<ItemSchema>;
+  // control: Control<ItemSchema>;
+  // setValue: UseFormSetValue<ItemSchema>;
 }> = ({
   label,
   required,
-  error,
+  // error,
   hint,
   readOnly,
-  register,
+  // register,
   registerName,
-  control,
-  setValue: setFormValue,
+  // control,
+  // setValue: setFormValue,
 }) => {
   const id = useId();
 
-  const reactHookFormValue = useWatch<ItemSchema>({
-    control,
-    name: registerName,
-  });
+  const {
+    watch,
+    register,
+    setValue,
+    formState: { errors },
+  } = useFormContext<ItemSchema>();
+
+  const error = useMemo(() => {
+    const e = errors[registerName]?.message;
+    if (typeof e === "string") return e;
+    console.log(e);
+    return "";
+  }, [errors, registerName]);
+
+  const reactHookFormValue = watch(registerName) as string;
 
   const handleChange: NonNullable<
     ComponentPropsWithoutRef<typeof Textarea>["onChange"]
   > = useCallback(
     (e) => {
-      setFormValue(registerName, e.target.value);
+      setValue(registerName, e.target.value);
     },
-    [registerName, setFormValue]
+    [registerName, setValue]
   );
 
   const statusLabelProps = required
@@ -80,7 +93,6 @@ export const TextareaGroup: FC<{
           readOnly={readOnly}
           disabled={readOnly}
           error={!!error}
-          // @ts-expect-error
           value={reactHookFormValue}
           onChange={handleChange}
           {...form}

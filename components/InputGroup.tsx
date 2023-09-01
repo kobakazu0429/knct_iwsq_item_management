@@ -1,28 +1,39 @@
-import { useId, type FC } from "react";
+import { useId, useMemo, type FC } from "react";
 import { FormGroup, Input, Text } from "smarthr-ui";
-import { type UseFormRegister } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { type ItemSchema } from "../lib/item";
 
-export const InputGroup: FC<{
+interface Props {
   label: string;
   required?: boolean;
-  error?: string;
   hint?: string;
   readOnly?: boolean;
   trailingVisual?: string;
-  register?: UseFormRegister<ItemSchema>;
-  registerName?: keyof ItemSchema;
-}> = ({
+  registerName: keyof ItemSchema;
+}
+
+export const InputGroup: FC<Props> = ({
   label,
   required,
-  error,
   hint,
   readOnly,
-  register,
   registerName,
   trailingVisual,
 }) => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<ItemSchema>();
+
+  const error = useMemo(() => {
+    const e = errors[registerName]?.message;
+    if (typeof e === "string") return e;
+    console.log(e);
+    return "";
+  }, [errors, registerName]);
+
   const id = useId();
+
   const statusLabelProps = required
     ? [
         {
@@ -31,8 +42,6 @@ export const InputGroup: FC<{
         },
       ]
     : undefined;
-
-  const form = (register && registerName && register(registerName)) ?? {};
 
   return (
     <div>
@@ -51,7 +60,7 @@ export const InputGroup: FC<{
           disabled={readOnly}
           suffix={trailingVisual}
           error={!!error}
-          {...form}
+          {...register(registerName)}
         />
       </FormGroup>
       <Text color="TEXT_GREY">{hint}</Text>

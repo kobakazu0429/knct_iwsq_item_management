@@ -9,27 +9,35 @@ import { itemSchemaForCreate, type ItemSchemaForCreate } from "../lib/item";
 import { formatISO } from "date-fns";
 import { TextareaGroup } from "./TextareaGroup";
 
-const expires_at = formatISO(getNextExpiresDate(new Date()));
-
-const defaultValues = {
-  notes: "",
-  location: "スクエア廊下",
-  expires_at: expires_at.includes("+") ? expires_at.split("+")[0] : expires_at,
-};
-
 interface Props {
   defaultValues?: Partial<ItemSchemaForCreate>;
   onSubmit: Parameters<UseFormHandleSubmit<ItemSchemaForCreate>>[0];
 }
 
 export const Form: FC<Props> = (props) => {
+  const expires_at = useMemo(
+    () => formatISO(getNextExpiresDate(new Date())),
+    []
+  );
+
+  const defaultValues = useMemo(
+    () => ({
+      notes: "",
+      location: "スクエア廊下",
+      expires_at: expires_at.includes("+")
+        ? expires_at.split("+")[0]
+        : expires_at,
+    }),
+    [expires_at]
+  );
+
   const defaultValuesForReset = useMemo(
     () => ({
       id: itemId(),
       ...defaultValues,
       ...props.defaultValues,
     }),
-    [props.defaultValues]
+    [defaultValues, props.defaultValues]
   );
 
   const {
@@ -55,62 +63,29 @@ export const Form: FC<Props> = (props) => {
       })}
     >
       <Stack gap="XL">
-        <InputGroup
-          label="ID"
-          readOnly
-          // @ts-expect-error
-          register={register}
-          registerName="id"
-        />
+        <InputGroup label="ID" readOnly registerName="id" />
 
         <InputGroup
           label="物品名"
           hint="「IW イス パーツ」のように用途を分かりやすく記入してください"
           required
-          error={errors.name?.message}
-          // @ts-expect-error
-          register={register}
           registerName="name"
         />
 
         <TextareaGroup
           label="危険物など特記事項"
           hint="「薬品やバッテリー」などが危険物がある場合は分かりやすく記入してください。判断が難しい場合はTAに相談してください。"
-          error={errors.notes?.message}
-          // @ts-expect-error
-          register={register}
           registerName="notes"
-          // @ts-expect-error
-          control={control}
-          // @ts-expect-error
-          setValue={setValue}
         />
 
-        <InputGroup
-          label="保管場所"
-          required
-          error={errors.location?.message}
-          // @ts-expect-error
-          register={register}
-          registerName="location"
-        />
+        <InputGroup label="保管場所" required registerName="location" />
 
-        <InputGroup
-          label="責任者の学生番号"
-          required
-          error={errors.chief_id?.message}
-          // @ts-expect-error
-          register={register}
-          registerName="chief_id"
-        />
+        <InputGroup label="責任者の学生番号" required registerName="chief_id" />
 
         <InputGroup
           label="責任者の名前"
           hint="「高専 太郎」のように入力してください"
           required
-          error={errors.chief_name?.message}
-          // @ts-expect-error
-          register={register}
           registerName="chief_name"
         />
 
@@ -118,9 +93,6 @@ export const Form: FC<Props> = (props) => {
           label="責任者の所属"
           hint="「E1 イスを作ろう」のように学年学科や部活名、テーマ名など入力してください"
           required
-          error={errors.chief_department?.message}
-          // @ts-expect-error
-          register={register}
           registerName="chief_department"
         />
 
@@ -128,9 +100,6 @@ export const Form: FC<Props> = (props) => {
           label="責任者のメールアドレス"
           hint="「e17-abcd」のように@kure.kosen-ac.jpで終わるメールアドレスの最初のみ入力してください"
           required
-          error={errors.chief_email?.message}
-          // @ts-expect-error
-          register={register}
           registerName="chief_email"
           trailingVisual="@kure.kosen-ac.jp"
         />
@@ -139,22 +108,13 @@ export const Form: FC<Props> = (props) => {
           label="保管期限"
           hint="通常は学期末(夏休み前、春休み前)1週間前までです"
           required
-          // @ts-expect-error
-          register={register}
           registerName="expires_at"
-          // @ts-expect-error
-          control={control}
-          // @ts-expect-error
-          setValue={setValue}
         />
 
         <InputGroup
           label="TA名前"
           hint="物品の保管許可、変更、撤収などの確認をしたTAの名前を入力してください"
           required
-          error={errors.confirmed_ta_name?.message}
-          // @ts-expect-error
-          register={register}
           registerName="confirmed_ta_name"
         />
 

@@ -5,6 +5,7 @@ import {
   useState,
   type FC,
   type ComponentPropsWithoutRef,
+  useMemo,
 } from "react";
 import { FormGroup, Text, DatePicker } from "smarthr-ui";
 import {
@@ -12,6 +13,7 @@ import {
   type UseFormRegister,
   type UseFormSetValue,
   type Control,
+  useFormContext,
 } from "react-hook-form";
 import { addYears, format } from "date-fns";
 import styled from "styled-components";
@@ -23,29 +25,46 @@ type OnlyStringValueItemSchema = OmitByValue<ItemSchema, boolean>;
 export const DatePickerGroup: FC<{
   label: string;
   required?: boolean;
-  error?: string;
+  // error?: string;
   hint?: string;
   readOnly?: boolean;
-  register: UseFormRegister<ItemSchema>;
+  // register: UseFormRegister<ItemSchema>;
   registerName: keyof OnlyStringValueItemSchema;
-  control: Control<OnlyStringValueItemSchema>;
-  setValue: UseFormSetValue<OnlyStringValueItemSchema>;
+  // control: Control<OnlyStringValueItemSchema>;
+  // setValue: UseFormSetValue<OnlyStringValueItemSchema>;
 }> = ({
   label,
   required,
-  error,
+  // error,
   hint,
   readOnly,
-  register,
+  // register,
   registerName,
-  control,
-  setValue: setFormValue,
+  // control,
+  // setValue: setFormValue,
 }) => {
   const id = useId();
-  const reactHookFormValue = useWatch<OnlyStringValueItemSchema>({
-    control,
-    name: registerName,
-  });
+
+  const {
+    watch,
+    register,
+    setValue: setFormValue,
+    formState: { errors },
+  } = useFormContext<ItemSchema>();
+
+  const error = useMemo(() => {
+    const e = errors[registerName]?.message;
+    if (typeof e === "string") return e;
+    console.log(e);
+    return "";
+  }, [errors, registerName]);
+
+  // const reactHookFormValue = useWatch<OnlyStringValueItemSchema>({
+  //   control,
+  //   name: registerName,
+  // });
+
+  const reactHookFormValue = watch(registerName) as string;
 
   const formatter = (date: Date | string) => {
     if (typeof date === "string") {
