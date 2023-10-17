@@ -21,7 +21,7 @@
     "react-dom": "18.2.0",
     "react-hook-form": "7.38.0",
     "react-toastify": "9.0.8",
-    "smarthr-ui": "23.2.0",
+    "smarthr-ui": "23.6.0",
     "styled-components": "5.3.6",
     "ts-pattern": "4.0.6",
     "utility-types": "3.10.0",
